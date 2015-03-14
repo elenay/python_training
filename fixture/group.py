@@ -35,3 +35,17 @@ class GroupHelper:
         wd.find_element_by_name("selected[]").click()
         #submit deletion
         wd.find_element_by_name("delete").click()
+
+    def modify_first_group(self, group):
+        wd = self.app.wd
+        self.open_groups_page()
+        #select first group
+        wd.find_element_by_name("selected[]").click()
+        #start editing
+        wd.find_element_by_name("edit").click()
+        #change name
+        wd.find_element_by_name("group_name").click()
+        wd.find_element_by_name("group_name").clear()
+        wd.find_element_by_name("group_name").send_keys(group.name)
+        #submit changes
+        wd.find_element_by_name("update").click()
