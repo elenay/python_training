@@ -9,7 +9,8 @@ class ContactHelper:
 
     def open_add_contact_page(self):
         wd = self.app.wd
-        wd.find_element_by_link_text("add new").click()
+        if not (wd.current_url.endswith("/edit.php")):
+            wd.find_element_by_link_text("add new").click()
 
     def change_contact_field_value(self, field_name, text):
         wd = self.app.wd
@@ -20,6 +21,7 @@ class ContactHelper:
 
     def fill_in_new_contact_form(self, contact):
         wd = self.app.wd
+        self.open_add_contact_page()
         self.change_contact_field_value("firstname", contact.firstname)
         self.change_contact_field_value("lastname", contact.lastname)
         self.change_contact_field_value("email", contact.email)
@@ -32,19 +34,22 @@ class ContactHelper:
 
     def open_contacts_page(self):
         wd = self.app.wd
-        wd.find_element_by_link_text("home").click()
+        if not (wd.current_url.endswith("/")):
+            wd.find_element_by_link_text("home").click()
 
     def edit_first_contact(self, new_contact_data):
         wd = self.app.wd
+        self.open_contacts_page()
         #edit first contact
         wd.find_element_by_xpath(".//*[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
         #modify first name of contact
         self.fill_in_new_contact_form(new_contact_data)
         #submit changes
-        wd.find_element_by_name("update").click()
+        wd.find_element_by_xpath(".//*[@id='content']/form[1]/input[1]").click()
 
     def delete_first_contact(self):
         wd = self.app.wd
+        self.open_contacts_page()
         #select first contact
         wd.find_element_by_name("selected[]")
         #delete this contact
