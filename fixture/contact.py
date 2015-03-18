@@ -34,14 +34,12 @@ class ContactHelper:
         wd = self.app.wd
         wd.find_element_by_link_text("home").click()
 
-    def edit_first_contact(self, contact):
+    def edit_first_contact(self, new_contact_data):
         wd = self.app.wd
         #edit first contact
         wd.find_element_by_xpath(".//*[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
         #modify first name of contact
-        wd.find_element_by_name("firstname").click()
-        wd.find_element_by_name("firstname").clear()
-        wd.find_element_by_name("firstname").send_keys(contact.firstname)
+        self.fill_in_new_contact_form(new_contact_data)
         #submit changes
         wd.find_element_by_name("update").click()
 
