@@ -2,9 +2,7 @@ __author__ = 'eya'
 
 class Contact:
 
-    def __init__(self, firstname, middlename, lastname, nickname, email):
+    def __init__(self, firstname=None, lastname=None, email=None):
         self.firstname = firstname
-        self.middlename = middlename
         self.lastname = lastname
-        self.nickname = nickname
         self.email = email

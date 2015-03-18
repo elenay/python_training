@@ -1,3 +1,5 @@
+from model import contact
+
 __author__ = 'eya'
 
 class ContactHelper:
@@ -9,24 +11,22 @@ class ContactHelper:
         wd = self.app.wd
         wd.find_element_by_link_text("add new").click()
 
+    def change_contact_field_value(self, field_name, text):
+        wd = self.app.wd
+        if text is not None:
+            wd.find_element_by_name(field_name).click()
+            wd.find_element_by_name(field_name).clear()
+            wd.find_element_by_name(field_name).send_keys(text)
+
     def fill_in_new_contact_form(self, contact):
         wd = self.app.wd
-        #filling in necessary fields
-        wd.find_element_by_name("firstname").click()
-        wd.find_element_by_name("firstname").clear()
-        wd.find_element_by_name("firstname").send_keys(contact.firstname)
-        wd.find_element_by_name("middlename").click()
-        wd.find_element_by_name("middlename").clear()
-        wd.find_element_by_name("middlename").send_keys(contact.middlename)
-        wd.find_element_by_name("lastname").click()
-        wd.find_element_by_name("lastname").clear()
-        wd.find_element_by_name("lastname").send_keys(contact.lastname)
-        wd.find_element_by_name("nickname").click()
-        wd.find_element_by_name("nickname").clear()
-        wd.find_element_by_name("nickname").send_keys(contact.nickname)
-        wd.find_element_by_name("email").click()
-        wd.find_element_by_name("email").clear()
-        wd.find_element_by_name("email").send_keys(contact.email)
+        self.change_contact_field_value("firstname", contact.firstname)
+        self.change_contact_field_value("lastname", contact.lastname)
+        self.change_contact_field_value("email", contact.email)
+
+    def create(self, contact):
+        wd = self.app.wd
+        self.fill_in_new_contact_form(contact)
         #submit filled in form
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
 
@@ -54,6 +54,9 @@ class ContactHelper:
         #confirm deletion
         wd.switch_to_alert().accept()
 
+    def count(self):
+        wd = self.app.wd
+        return len(wd.find_elements_by_name("selected[]"))
 
 
 
