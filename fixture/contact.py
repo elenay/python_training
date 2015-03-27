@@ -1,7 +1,8 @@
+import time
 from model import contact
 
 __author__ = 'eya'
-
+from model.contact import Contact
 class ContactHelper:
 
     def __init__(self, app):
@@ -21,13 +22,13 @@ class ContactHelper:
 
     def fill_in_new_contact_form(self, contact):
         wd = self.app.wd
-        self.open_add_contact_page()
         self.change_contact_field_value("firstname", contact.firstname)
         self.change_contact_field_value("lastname", contact.lastname)
         self.change_contact_field_value("email", contact.email)
 
     def create(self, contact):
         wd = self.app.wd
+        self.open_add_contact_page()
         self.fill_in_new_contact_form(contact)
         #submit filled in form
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
@@ -43,15 +44,17 @@ class ContactHelper:
         #edit first contact
         wd.find_element_by_xpath(".//*[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
         #modify first name of contact
+        time.sleep(2)
         self.fill_in_new_contact_form(new_contact_data)
         #submit changes
+        time.sleep(2)
         wd.find_element_by_xpath(".//*[@id='content']/form[1]/input[1]").click()
 
     def delete_first_contact(self):
         wd = self.app.wd
         self.open_contacts_page()
         #select first contact
-        wd.find_element_by_name("selected[]")
+        wd.find_element_by_name("selected[]").click()
         #delete this contact
         wd.find_element_by_xpath(".//*[@id='content']/form[2]/div[2]/input").click()
         #confirm deletion
@@ -60,6 +63,16 @@ class ContactHelper:
     def count(self):
         wd = self.app.wd
         return len(wd.find_elements_by_name("selected[]"))
+
+    def get_contact_list(self):
+        wd = self.app.wd
+        self.open_contacts_page()
+        contacts = []
+        for element in wd.find_elements_by_css_selector("tr[name=entry]"):
+            text = element.text
+            id = element.find_element_by_name("selected[]").get_attribute("value")
+            contacts.append(Contact(firstname=text, id=id))
+        return contacts
 
 
 
