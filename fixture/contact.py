@@ -39,24 +39,32 @@ class ContactHelper:
         if not (wd.current_url.endswith("/")):
             wd.find_element_by_link_text("home").click()
 
-    def edit_first_contact(self, new_contact_data):
+    def select_and_edit_contact_by_index(self, index):
+        wd = self.app.wd
+        wd.find_elements_by_xpath(".//*[@id='maintable']/tbody/tr/td[8]/a/img")[index].click()
+
+    def edit_contact_by_index(self, index, new_contact_data):
         wd = self.app.wd
         self.open_contacts_page()
-        #edit first contact
-        wd.find_element_by_xpath(".//*[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
+        self.select_and_edit_contact_by_index(index)
         #modify first name of contact
-        time.sleep(2)
         self.fill_in_new_contact_form(new_contact_data)
         #submit changes
-        time.sleep(2)
         wd.find_element_by_xpath(".//*[@id='content']/form[1]/input[1]").click()
         self.contact_cache = None
 
-    def delete_first_contact(self):
+    def select_contact_by_index(self, index):
+        wd = self.app.wd
+        wd.find_elements_by_name("selected[]")[index].click()
+
+    def select_first_contact(self):
+        wd = self.app.wd
+        wd.find_element_by_name("selected[]").click()
+
+    def delete_contact_by_index(self, index):
         wd = self.app.wd
         self.open_contacts_page()
-        #select first contact
-        wd.find_element_by_name("selected[]").click()
+        self.select_contact_by_index(index)
         #delete this contact
         wd.find_element_by_xpath(".//*[@id='content']/form[2]/div[2]/input").click()
         #confirm deletion
