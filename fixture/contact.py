@@ -88,7 +88,7 @@ class ContactHelper:
                 surname = element.find_elements_by_css_selector("td")[1].text
                 id = element.find_element_by_name("selected[]").get_attribute("value")
                 self.contact_cache.append(Contact(firstname=name, lastname=surname, id=id))
-        return self.contact_cache
+        return list(self.contact_cache)
 
 
 
