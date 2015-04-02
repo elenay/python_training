@@ -4,11 +4,15 @@ __author__ = 'eya'
 
 class Contact:
 
-    def __init__(self, firstname=None, lastname=None, email=None, id=None):
+    def __init__(self, firstname=None, lastname=None, email=None, homephone=None, workphone=None, mobilephone=None, secondaryphone=None, id=None):
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
         self.id = id
+        self.homephone = homephone
+        self.workphone = workphone
+        self.mobilephone = mobilephone
+        self.secondaryphone = secondaryphone
 
     def __repr__(self):
         return "%s:%s %s" % (self.id, self.firstname, self.lastname)
