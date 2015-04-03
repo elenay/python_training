@@ -90,8 +90,9 @@ class ContactHelper:
                 id = cells[0].find_element_by_tag_name("input").get_attribute("value")
                 all_emails = cells[4].text
                 all_phones = cells[5].text
+                email = cells[4].text
                 address = cells[3].text
-                self.contact_cache.append(Contact(firstname=name, lastname=surname, id=id,
+                self.contact_cache.append(Contact(firstname=name, lastname=surname, id=id, email=email,
                                                   all_emails_from_home_page=all_emails,
                                                   all_phones_from_home_page=all_phones,
                                                   address=address))
