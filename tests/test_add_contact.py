@@ -2,21 +2,17 @@ __author__ = 'eya'
 from model.contact import Contact
 import pytest
 import random
-import string
+import string, re
 
 def random_string(maxlen):
     symbols = string.ascii_letters + string.digits + " "*10
-    return "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
+    s = "".join([random.choice(symbols) for i in range(random.randrange(maxlen))]).strip()
+    return re.sub("\s\s+", " ", s)
 
-def random_email(maxlen):
-    symbols = string.ascii_letters + string.digits
-    return "".join([random.choice(symbols) for i in range(random.randrange(maxlen))]) + "@ww.com"
-
-testdata = [Contact(firstname="", lastname="", email="")] + [
-    Contact(firstname=random_string(20), lastname=random_string(20), email=random_email(10))
-    for i in range(2)
-]
-
+testdata = [Contact(firstname=firstname, lastname=lastname, email=email)
+    for firstname in ["", random_string(10)]
+    for lastname in ["", random_string(20)]
+    for email in ["", random_string(20)]]
 
 @pytest.mark.parametrize("contact", testdata, ids=[repr(x) for x in testdata])
 def test_add_contact(app, contact):
