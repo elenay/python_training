@@ -1,17 +1,21 @@
 __author__ = 'eya'
 from model.group import Group
-from random import randrange
+import random
 
 
-def test_modify_group(app):
-    if app.group.count() == 0:
+def test_modify_group(app, db, check_ui):
+    if len(db.get_group_list()) == 0:
         app.group.create(Group(name = "testone"))
-    old_groups = app.group.get_group_list()
-    index = randrange(len(old_groups))
+    old_groups = db.get_group_list()
+    edited_group = random.choice(old_groups)
     group = Group(name="edited name")
-    group.id = old_groups[index].id
-    app.group.modify_group_by_index(index, group)
-    assert len(old_groups) == app.group.count()
-    new_groups = app.group.get_group_list()
+    index = old_groups.index(edited_group)
+    app.group.modify_group_by_id(edited_group.id, group)
+    assert len(old_groups) == len(db.get_group_list())
+    new_groups = db.get_group_list()
+    print(new_groups)
+
     old_groups[index] = group
+    print(old_groups)
+
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
