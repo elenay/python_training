@@ -10,8 +10,7 @@ class ContactHelper:
 
     def open_add_contact_page(self):
         wd = self.app.wd
-        if not (wd.current_url.endswith("/edit.php")):
-            wd.find_element_by_link_text("add new").click()
+        wd.find_element_by_link_text("add new").click()
 
     def change_contact_field_value(self, field_name, text):
         wd = self.app.wd
