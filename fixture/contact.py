@@ -42,10 +42,24 @@ class ContactHelper:
         wd = self.app.wd
         wd.find_elements_by_xpath(".//*[@id='maintable']/tbody/tr/td[8]/a/img")[index].click()
 
+    def select_and_edit_contact_by_id(self, id):
+        wd = self.app.wd
+        wd.find_element_by_css_selector("a[href$='edit.php?id=%s']" % id).click()
+
     def edit_contact_by_index(self, index, new_contact_data):
         wd = self.app.wd
         self.open_contacts_page()
         self.select_and_edit_contact_by_index(index)
+        #modify first name of contact
+        self.fill_in_new_contact_form(new_contact_data)
+        #submit changes
+        wd.find_element_by_xpath(".//*[@id='content']/form[1]/input[1]").click()
+        self.contact_cache = None
+
+    def edit_contact_by_id(self, id, new_contact_data):
+        wd = self.app.wd
+        self.open_contacts_page()
+        self.select_and_edit_contact_by_id(id)
         #modify first name of contact
         self.fill_in_new_contact_form(new_contact_data)
         #submit changes
