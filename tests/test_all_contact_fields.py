@@ -16,7 +16,14 @@ def test_all_fields_on_edit_page(app, db):
 def test_all_fields_on_home_page(app, db):
     contacts_from_home_page = app.contact.get_contact_list()
     db_contacts = db.get_contact_list()
+    index = range(len(contacts_from_home_page))
     assert sorted(contacts_from_home_page, key=Contact.id_or_max) == sorted(db_contacts, key=Contact.id_or_max)
+    for item in index:
+        assert (sorted(contacts_from_home_page, key=Contact.id_or_max))[item].all_phones_from_home_page == merge_phones_like_on_home_page(sorted(db_contacts, key=Contact.id_or_max)[item])
+        assert (sorted(contacts_from_home_page, key=Contact.id_or_max))[item].all_emails_from_home_page == merge_emails_like_on_home_page(sorted(db_contacts, key=Contact.id_or_max)[item])
+        assert (sorted(contacts_from_home_page, key=Contact.id_or_max))[item].firstname == (sorted(db_contacts, key=Contact.id_or_max))[item].firstname
+        assert (sorted(contacts_from_home_page, key=Contact.id_or_max))[item].lastname == (sorted(db_contacts, key=Contact.id_or_max))[item].lastname
+        assert (sorted(contacts_from_home_page, key=Contact.id_or_max))[item].address == (sorted(db_contacts, key=Contact.id_or_max))[item].address
 
 
 def clear(s):
