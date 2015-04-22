@@ -66,6 +66,21 @@ class ContactHelper:
         wd.find_element_by_xpath(".//*[@id='content']/form[1]/input[1]").click()
         self.contact_cache = None
 
+    def add_contact_by_id_to_group(self, id):
+        wd = self.app.wd
+        self.open_contacts_page()
+        #choose random contact to add
+        self.select_contact_by_id(id)
+        #select random group to add to
+        self.select_random_group_from_list()
+        #confirm adding
+        wd.find_element_by_xpath("html/body/div/div[4]/form[2]/div[4]/input").click()
+
+    def select_random_group_from_list(self):
+        wd = self.app.wd
+        index = len(wd.find_elements_by_xpath(".//*[@id='content']/form[2]/div[4]/select/option[]"))
+        wd.find_element_by_xpath(".//*[@id='content']/form[2]/div[4]/select/option[%s]" % index).click()
+
     def select_contact_by_index(self, index):
         wd = self.app.wd
         wd.find_elements_by_name("selected[]")[index].click()
