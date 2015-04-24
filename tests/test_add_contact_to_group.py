@@ -4,7 +4,7 @@ from model.group import Group
 from fixture.orm import OrmFixture
 import random
 
-db = OrmFixture(host="127.0.0.1", name="addressbook", user="root", password="")
+orm_db = OrmFixture(host="127.0.0.1", name="addressbook", user="root", password="")
 
 def test_add_contact_to_group(app, db):
     if len(db.get_group_list()) == 0:
@@ -13,7 +13,7 @@ def test_add_contact_to_group(app, db):
         app.contact.create(Contact(firstname="NoOneWasHere"))
     old_contacts = db.get_contact_list()
     if app.contact.check_presence_contact_not_in_group() is True:
-        contacts_not_in_group = db.get_contacts_not_in_group()
+        contacts_not_in_group = orm_db.get_contacts_not_in_group(Group(id="187"))
         added_contact = random.choice(contacts_not_in_group)
     else:
         app.contact.create(Contact(firstname="EmptyGroup"))
