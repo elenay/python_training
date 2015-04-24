@@ -1,3 +1,5 @@
+import time
+
 __author__ = 'eya'
 from model.contact import Contact
 import re
@@ -78,8 +80,19 @@ class ContactHelper:
 
     def select_random_group_from_list(self):
         wd = self.app.wd
-        index = len(wd.find_elements_by_xpath(".//*[@id='content']/form[2]/div[4]/select/option[]"))
+        wd.find_element_by_xpath(".//*[@id='content']/form[2]/div[4]/select").click()
+        index = len(wd.find_elements_by_xpath(".//*[@id='content']/form[2]/div[4]/select/option"))
         wd.find_element_by_xpath(".//*[@id='content']/form[2]/div[4]/select/option[%s]" % index).click()
+
+    def check_presence_contact_not_in_group(self):
+        wd = self.app.wd
+        self.open_contacts_page()
+        wd.find_element_by_xpath(".//*[@id='right']/select/option[2]").click()
+        time.sleep(2)
+        if len(wd.find_elements_by_name("selected[]")) != 0:
+            return True
+        else:
+            return False
 
     def select_contact_by_index(self, index):
         wd = self.app.wd
@@ -119,6 +132,11 @@ class ContactHelper:
         return len(wd.find_elements_by_name("selected[]"))
 
     contact_cache = None
+
+    # def contacts_not_in_group(self):
+    #     wd = self.app.wd
+    #     self.open_contacts_page()
+    #     return self.get_contact_list()
 
     def get_contact_list(self):
         if self.contact_cache is None:
