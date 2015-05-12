@@ -84,15 +84,20 @@ class ContactHelper:
         index = len(wd.find_elements_by_xpath(".//*[@id='content']/form[2]/div[4]/select/option"))
         wd.find_element_by_xpath(".//*[@id='content']/form[2]/div[4]/select/option[%s]" % index).click()
 
-    def check_presence_contact_not_in_group(self):
+    def check_presence_contact_not_in_any_group(self):
         wd = self.app.wd
         self.open_contacts_page()
         wd.find_element_by_xpath(".//*[@id='right']/select/option[2]").click()
-        time.sleep(2)
-        if len(wd.find_elements_by_name("selected[]")) != 0:
-            return True
-        else:
-            return False
+        return len(wd.find_elements_by_name("selected[]"))
+
+    def check_presence_contact_at_least_in_one_group(self):
+        wd = self.app.wd
+        self.open_contacts_page()
+        options = list(wd.find_elements_by_xpath(".//*[@id='right']/select/option"))
+        print(options)
+        pass
+        wd.find_element_by_xpath(".//*[@id='right']/select/option[3]").click()
+        return len(wd.find_elements_by_name("selected[]"))
 
     def select_contact_by_index(self, index):
         wd = self.app.wd
@@ -133,10 +138,23 @@ class ContactHelper:
 
     contact_cache = None
 
-    # def contacts_not_in_group(self):
-    #     wd = self.app.wd
-    #     self.open_contacts_page()
-    #     return self.get_contact_list()
+    def contacts_not_in_group(self):
+        wd = self.app.wd
+        self.contact_cache = []
+        for row in wd.find_elements_by_name("entry"):
+            cells = row.find_elements_by_tag_name("td")
+            name = cells[2].text
+            surname = cells[1].text
+            id = cells[0].find_element_by_tag_name("input").get_attribute("value")
+            all_emails = cells[4].text
+            all_phones = cells[5].text
+            email = cells[4].text
+            address = cells[3].text
+            self.contact_cache.append(Contact(firstname=name, lastname=surname, id=id, email=email,
+                                                  all_emails_from_home_page=all_emails,
+                                                  all_phones_from_home_page=all_phones,
+                                                  address=address))
+        return list(self.contact_cache)
 
     def get_contact_list(self):
         if self.contact_cache is None:

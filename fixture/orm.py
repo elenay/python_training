@@ -62,8 +62,14 @@ class OrmFixture:
             select(c for c in OrmFixture.ORMContact if c.deprecated is None and orm_group not in c.groups))
 
     @db_session
-    def get_contacts_not_in_all_groups(self, group):
-        orm_group = list(select(g for g in OrmFixture.ORMGroup if g.id == group.id))
+    def get_contacts_in_any_group(self, group):
+        orm_group = list(select(g for g in OrmFixture.ORMGroup if g.id == group.id))[0]
+        return self.convert_contacts_to_model(
+            select(c for c in OrmFixture.ORMContact if c.deprecated is None and orm_group in c.groups))
+
+    @db_session
+    def get_contacts_not_in_all_groups(self):
+        orm_group = list(select(g for g in OrmFixture.ORMGroup if len(g.contacts) == 0))[0]
         return self.convert_contacts_to_model(
             select(c for c in OrmFixture.ORMContact if c.deprecated is None and orm_group not in c.groups))
 

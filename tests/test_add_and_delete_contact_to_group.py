@@ -6,17 +6,18 @@ import random
 
 orm_db = OrmFixture(host="127.0.0.1", name="addressbook", user="root", password="")
 
+
 def test_add_contact_to_group(app, db):
     if len(db.get_group_list()) == 0:
         app.group.create(Group(name="GroupForContact"))
     if len(db.get_contact_list()) == 0:
         app.contact.create(Contact(firstname="NoOneWasHere"))
     old_contacts = db.get_contact_list()
-    if app.contact.check_presence_contact_not_in_group() is True:
-        contacts_not_in_group = orm_db.get_contacts_not_in_group(Group(id="187"))
+    if app.contact.check_presence_contact_not_in_any_group() != 0:
+        contacts_not_in_group = app.contact.contacts_not_in_group()
         added_contact = random.choice(contacts_not_in_group)
     else:
-        app.contact.create(Contact(firstname="EmptyGroup"))
+        added_contact = app.contact.create(Contact(firstname="EmptyGroup"))
     app.contact.add_contact_by_id_to_group(added_contact.id)
     assert len(old_contacts) == app.contact.count()
     new_contacts = db.get_contact_list()
@@ -24,4 +25,13 @@ def test_add_contact_to_group(app, db):
 
 
 def test_delete_contact_from_group(app, db):
-    pass
+    if len(db.get_group_list()) == 0:
+        app.group.create(Group(name="GroupForContact"))
+    if len(db.get_contact_list()) == 0:
+        app.contact.create(Contact(firstname="NoOneWasHere"))
+    old_contacts = db.get_contact_list()
+    if app.contact.check_presence_contact_at_least_in_one_group() != 0:
+        contacts_in_group = app.contact.contacts_in_group()
+        deleted_contact = random.choice(contacts_in_group)
+    else:
+        deleted_contact = app.contact.add_contact_by_id_to_group(deleted_contact.id)
